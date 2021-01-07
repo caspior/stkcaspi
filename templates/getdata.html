@@ -1,0 +1,22 @@
+<!doctype html>
+<title>Adjusted Closing Prices</title>
+<link rel=stylesheet type=text/css href='{{ url_for('static',filename='style_stock.css')}}'>
+<div class=page>
+  <h1>Adjusted Closing Prices</h1>
+  <div class=metanav>
+
+<h4>
+Please select a stock ticker, year, and a month
+</h4>
+
+<form id='index_stock' method='post' action='plot_stock' >
+   <p>
+   Ticker: <input type='text' name='ticker_stock' />
+   </p>
+   <p>
+   <input type='submit' value='Plot!' />
+   </p>
+</form>
+
+</div>
+</div>
