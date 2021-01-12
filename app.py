@@ -7,7 +7,7 @@ app = Flask(__name__)
 def index_stock():
 	return render_template('getdata.html')
 
-@app.route('/plot_stock',methods=['GET','POST'])
+@app.route('/plot_stock',methods=['POST'])
 def plot_stock():
 	import numpy as np
 	import pandas as pd
@@ -33,7 +33,7 @@ def plot_stock():
 			else:
 				m = 28
 		else:
-        		m = 31
+			m = 31
 
 		prices = pd.DataFrame(index=range(m),columns=['Date','Adjusted Close'])
     
@@ -60,11 +60,11 @@ def plot_stock():
 
 	def datetime(x):
 		return np.array(x, dtype=np.datetime64)
-	
+
 	months_dict = {'01':'January', '02':'February', '03':'March', '04':'April', '05':'May', '06':'June', '07':'July', '08':'August', 	'09':'September', '10':'October', '11':'November', '12':'December'}
-	mty = months_dict[month]+' '+year
-	
-	p = figure(x_axis_type="datetime", title="Adjusted Closing Prices %s" % mty)
+	month_year = months_dict[month]+' '+year
+
+	p = figure(x_axis_type="datetime", title="Adjusted Closing Prices %s" % month_year)
 	p.grid.grid_line_alpha=0.3
 	p.xaxis.axis_label = 'Date'
 	p.yaxis.axis_label = 'Price (USD)'
@@ -77,7 +77,7 @@ def plot_stock():
 @app.route('/')
 def index():
 	return redirect('/index_stock')
-	
+
 if __name__ == '__main__':
 	port = int(os.environ.get("PORT", 5000))
 	app.run(threaded=True, port=port)
