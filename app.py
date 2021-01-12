@@ -1,12 +1,5 @@
 from flask import Flask,render_template,request,redirect
-import numpy as np
-import pandas as pd
-import requests
 import os
-
-from bokeh.layouts import gridplot
-from bokeh.plotting import figure, output_file, show
-from bokeh.embed import components
 
 app = Flask(__name__)
 
@@ -16,6 +9,13 @@ def index_stock():
 
 @app.route('/plot_stock',methods=['POST'])
 def plot_stock():
+	import numpy as np
+	import pandas as pd
+	import requests
+
+	from bokeh.layouts import gridplot
+	from bokeh.plotting import figure, output_file, show
+	from bokeh.embed import components
 
 	def get_stock(ticker,year,month):
 		key = '4W96UGLZ59DYW804'
@@ -80,4 +80,4 @@ def index():
 	
 if __name__ == '__main__':
 	port = int(os.environ.get("PORT", 5000))
-	app.run(threaded=True, port=5000)
+	app.run(threaded=True, port=port)
