@@ -1,24 +1,11 @@
 from flask import Flask,render_template,request,redirect
 app = Flask(__name__)
 
-app.vars={}
-
-@app.route('/index_stock',methods=['GET','POST'])
+@app.route('/index_stock')
 def index_stock():
-	if request.method == 'GET':
-		return render_template('getdata.html')
-	else:
-		app.vars['ticker'] = request.form['ticker_stock']
-		#app.vars['year'] = request.form['year_stock']
-		#app.vars['month'] = request.form['month_stock']
+	return render_template('getdata.html')
 
-		f = open('ticker.txt','w')
-		f.write(app.vars['ticker'])
-		f.close()
-
-		return redirect('/plot_stock')
-
-@app.route('/plot_stock',methods=['GET','POST'])
+@app.route('/plot_stock',methods=['POST'])
 def plot_stock():
 	import numpy as np
 	import pandas as pd
@@ -26,6 +13,7 @@ def plot_stock():
 
 	from bokeh.layouts import gridplot
 	from bokeh.plotting import figure, output_file, show
+	from bokeh.embed import components
 
 	def get_stock(ticker,year,month):
 		key = '4W96UGLZ59DYW804'
@@ -62,12 +50,9 @@ def plot_stock():
 		stock = {'ticker': ticker, 'year': year, 'month': month, 'prices': prices}
 		return stock
 
-	def nix(val, lst):
-		return [x for x in lst if x != val]
-
-	ticker = 'AAPL'
+	ticker = request.form['ticker_stock']
 	year = '2020'
-	month = '01'
+	month = '12'
 
 	stk = get_stock(ticker,year,month)
 
@@ -76,19 +61,16 @@ def plot_stock():
 	
 	months_dict = {'01':'January', '02':'February', '03':'March', '04':'April', '05':'May', '06':'June', '07':'July', '08':'August', 	'09':'September', '10':'October', '11':'November', '12':'December'}
 	mty = months_dict[month]+' '+year
-
+	
 	p = figure(x_axis_type="datetime", title="Adjusted Closing Prices %s" % mty)
 	p.grid.grid_line_alpha=0.3
 	p.xaxis.axis_label = 'Date'
 	p.yaxis.axis_label = 'Price (USD)'
-
 	p.line(datetime(stk['prices']['Date']), stk['prices']['Adjusted Close'], color='#DB1111', legend_label=stk['ticker'], width=3)
 
-	st = np.array(stk['prices']['Adjusted Close'])
-	st_dates = np.array(stk['prices']['Date'])
+	script, div = components(p)
 
-	output_file("stock.html", title="Adjusted Closing Prices")
-	show(gridplot([[p]], plot_width=400, plot_height=400))
+	return render_template('plot.html', script=script, div=div)
 
 @app.route('/')
 def index():
