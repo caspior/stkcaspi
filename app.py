@@ -2,6 +2,7 @@ from flask import Flask,render_template,request,redirect
 import numpy as np
 import pandas as pd
 import requests
+import os
 
 from bokeh.layouts import gridplot
 from bokeh.plotting import figure, output_file, show
@@ -75,7 +76,8 @@ def plot_stock():
 
 @app.route('/')
 def index():
-    return redirect('/index_stock')
+	return redirect('/index_stock')
 	
 if __name__ == '__main__':
-    app.run(threaded=True, port=5000)
+	port = int(os.environ.get("PORT", 5000))
+	app.run(threaded=True, port=5000)
