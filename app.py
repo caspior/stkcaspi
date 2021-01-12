@@ -7,7 +7,7 @@ app = Flask(__name__)
 def index_stock():
 	return render_template('getdata.html')
 
-@app.route('/plot_stock',methods=['POST'])
+@app.route('/plot_stock',methods=['GET','POST'])
 def plot_stock():
 	import numpy as np
 	import pandas as pd
